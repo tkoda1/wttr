@@ -1,0 +1,50 @@
+import requests
+zip = input('What is your zip code? ')
+
+#Ensures valid input without crashing
+try:
+    if(len(zip) != 5):
+        print("Please enter a valid Zip Code")
+        zip = input('What is your zip code? ')
+    zip  = int(zip)
+except:
+    print("Please enter a valid Zip Code")
+    zip = input('What is your zip code? ')
+
+#Gets the weather information from wttr.in
+link = "http://wttr.in/" + str(zip) + "?format=+%t+%f"
+link2 = "http://wttr.in/" + str(zip) + "?format=%t"
+link3 = "http://wttr.in/" + str(zip) + "?format=%C"
+temp = requests.get(link)
+tempCalc = requests.get(link2)
+weather = requests.get(link3)
+
+#Cretes list of weather conditions.
+temp = str(temp.text)
+temp = temp.split(" ")
+tempCalc = list(tempCalc.text)
+
+#Seprates the intiger value in the tempature then calculates celcius.
+tempCalc = [int(s) for s in tempCalc if s.isdigit()]
+res = sum(d * 10**i for i, d in enumerate(tempCalc[::-1]))
+c = (5/9) * (res-32)
+c = round(c,1)
+c = str(c) +"\N{DEGREE SIGN} C"
+
+
+#Formats and outputs the weather conditions with a specific emoji.
+if(50 <res <80):
+    print("The weather conditions are: " + 
+    weather.text +" the weather is: "+ temp[1]+ " \U0001f600"
+    +" but the weather feels like: " +temp[2] +
+    " in celcius the weather is: "+ c) 
+elif(res <= 50):
+    print("The weather conditions are: " + 
+    weather.text +" the weather is: "+ temp[1]
+    + " \U0001F976"+" but the weather feels like: " +temp[2] +
+    " in celcius the weather is: "+ c) 
+else:
+    print("The weather conditions are: " + 
+    weather.text +" the weather is: "+ temp[1]
+    + " \U0001F525"+" but the weather feels like: " +temp[2] +
+    " in celcius the weather is: "+ c) 
